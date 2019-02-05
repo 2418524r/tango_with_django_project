@@ -84,9 +84,8 @@ class Chapter7LiveServerTestCase(StaticLiveServerTestCase):
 
         url_path = self.browser.current_url
         response = self.client.get(url_path)
-        print(response.content)
 
-        self.assertIn('required'.lower(), response.content.lower())
+        self.assertIn('required'.lower(), response.content.decode('ascii').lower())
 
     @chapter7
     def test_add_category_that_already_exists(self):
@@ -131,6 +130,7 @@ class Chapter7LiveServerTestCase(StaticLiveServerTestCase):
             # Access link to add page for the category
             url = self.live_server_url
             url = url.replace('localhost', '127.0.0.1')
+            print(url + reverse('add_page', args=[category.slug]))
             self.browser.get(url + reverse('add_page', args=[category.slug]))
 
             # Types new page name
@@ -203,7 +203,8 @@ class Chapter7ViewTests(TestCase):
         response = self.client.get(reverse('add_category'))
 
         # Check form in response context is instance of CategoryForm
-        self.assertTrue(isinstance(response.context['form'], CategoryForm))
+        print(response.context)
+        self.assertTrue(isinstance(response.context['category_form'], CategoryForm))
 
         # Check form is displayed correctly
         # Header
